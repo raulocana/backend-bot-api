@@ -11,7 +11,6 @@ User = get_user_model()
 class CustomUserAdmin(UserAdmin):
     add_form = UserAdminCreationForm
     form = UserAdminChangeForm
-    model = User
 
     list_display = (
         "uuid",
