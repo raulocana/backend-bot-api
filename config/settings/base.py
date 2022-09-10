@@ -72,6 +72,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "api.users",
+    "api.tickets",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
