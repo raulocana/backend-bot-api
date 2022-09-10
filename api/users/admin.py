@@ -18,6 +18,7 @@ class CustomUserAdmin(UserAdmin):
         "name",
         "email",
         "phone",
+        "origin",
     )
     search_fields = (
         "uuid",
@@ -32,7 +33,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {"fields": ("password",)}),
-        (_("Personal info"), {"fields": ("name", "email", "phone")}),
+        (_("Personal info"), {"fields": ("name", "email", "phone", "origin")}),
         (
             _("Permissions"),
             {
@@ -52,7 +53,7 @@ class CustomUserAdmin(UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("name", "email", "phone"),
+                "fields": ("name", "email", "phone", "origin"),
             },
         ),
         (

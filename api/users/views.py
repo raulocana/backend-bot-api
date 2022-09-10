@@ -24,6 +24,7 @@ class UserViewSet(CreateModelMixin, GenericViewSet):
             user = User.objects.get(email=serializer.validated_data.get("email"))
             user.name = serializer.validated_data.get("name")
             user.phone = serializer.validated_data.get("phone")
+            user.origin = serializer.validated_data.get("origin", None)
             user.save()
         except Exception:
             user = User.objects.create(**serializer.validated_data)

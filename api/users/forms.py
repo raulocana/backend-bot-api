@@ -33,6 +33,6 @@ class UserAdminCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ("name", "email", "phone")
+        fields = ("name", "email", "phone", "origin")
 
         error_messages = {"email": {"unique": _("This email has already been taken.")}}

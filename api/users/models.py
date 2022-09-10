@@ -51,6 +51,8 @@ class User(AbstractUser):
 
     phone = CharField(_("Phone number"), blank=False, max_length=32)
 
+    origin = CharField(_("Origin (country)"), blank=True, null=True, max_length=32)
+
     USERNAME_FIELD = "email"
 
     # Email field is imposed as required, as it is being used as the username field.
