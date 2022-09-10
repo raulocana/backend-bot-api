@@ -70,13 +70,15 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
 ]
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "api.users",
+]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-# AUTH_USER_MODEL = "users.User"  # TODO: Change it with new user model
+AUTH_USER_MODEL = "users.User"
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
