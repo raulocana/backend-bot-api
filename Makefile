@@ -4,6 +4,9 @@ build:
 run: build
 	docker-compose -f local.yml up -d
 
+run-debug: build
+	docker-compose -f local.yml up postgres redis mailhog celerybeat celeryworker flower -d
+
 run-verbose: build
 	docker-compose -f local.yml up
 
@@ -24,6 +27,9 @@ showmigrations:
 
 createsuperuser:
 	docker-compose -f local.yml run --rm django python manage.py createsuperuser
+
+tests: build run-debug
+	docker-compose -f local.yml run --rm django python manage.py test
 
 restart: down run
 
