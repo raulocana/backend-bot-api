@@ -73,7 +73,7 @@ class InternalMessagingBroker(Task):
         )
 
         for it_serv in integration_services:
-            self.apply_async(args=[it_serv.value, ticket_uuid], retry=True)
+            self.apply_async(args=[it_serv.value, ticket_uuid], countdown=1, retry=True)
 
     def run(self, it_serv: str, ticket_uuid: str, *args, **kwargs):
 
