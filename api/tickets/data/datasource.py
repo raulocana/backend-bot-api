@@ -1,7 +1,10 @@
 from django.db import IntegrityError
 
 from api.tickets.models import Ticket
-from domain.services.common.exceptions import IntegrityErrorException
+from domain.services.common.exceptions import (
+    DoesNotExistException,
+    IntegrityErrorException,
+)
 from domain.services.tickets.datasources import TicketDatasourceInterface
 from domain.services.tickets.entities import TicketEntity
 
@@ -48,3 +51,10 @@ class TicketDatasource(TicketDatasourceInterface):
         else:
             orm_user = self._create_orm_ticket(ticket_entity)
         return self._map_orm_ticket_to_entity(orm_user)
+
+    def get_by_uuid(self, uuid: str) -> TicketEntity:
+        try:
+            orm_ticket = Ticket.objects.get(uuid=uuid)
+            return self._map_orm_ticket_to_entity(orm_ticket)
+        except Ticket.DoesNotExist:
+            raise DoesNotExistException(TicketEntity)

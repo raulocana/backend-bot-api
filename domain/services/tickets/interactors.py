@@ -1,6 +1,7 @@
 import inject
 
 from domain.services.common.exceptions import DoesNotExistException
+from domain.services.notifications.broker import InternalMessagingBroker
 from domain.services.tickets.entities import TicketEntity
 from domain.services.tickets.repositories import TicketRepository
 from domain.services.users.entities import UserEntity
@@ -11,6 +12,8 @@ class CreateTicketInteractor:
 
     user_repository = inject.attr(UserRepository)
     ticket_repository = inject.attr(TicketRepository)
+
+    internal_messaging_broker = inject.attr(InternalMessagingBroker)
 
     def execute(self, user_uuid: str, topic: str, question: str) -> TicketEntity:
         user = self.user_repository.get_by_uuid(user_uuid)
@@ -26,5 +29,6 @@ class CreateTicketInteractor:
         return ticket
 
     def _send_ticket_notifications(self, ticket: TicketEntity):
-        # TODO: Complete the internal notification logic
-        pass
+        self.internal_messaging_broker.execute(
+            topic_list=[ticket.topic], ticket_uuid=ticket.uuid
+        )

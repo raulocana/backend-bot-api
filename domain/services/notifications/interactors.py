@@ -1,5 +1,9 @@
 from django.core.mail import send_mail
 
+from config.settings.base import INTERNAL_DISTRIBUTION_EMAIL
+from domain.services.tickets.entities import TicketEntity
+from domain.services.users.entities import UserEntity
+
 
 class SendMailInterator:
 
@@ -36,3 +40,66 @@ class SendWelcomeMailInteractor(SendMailInterator):
 
         body = self.body_message.format(user_name=name)
         super().execute(email_recipients=[email], body=body, *args, **kwargs)
+
+
+class SendInternalTicketMailInteractor(SendMailInterator):
+
+    default_from_email = "no-reply@internal.umishop.com"
+    internal_to_email = INTERNAL_DISTRIBUTION_EMAIL
+
+    subject_message = (
+        "[New Ticket on {integration_name}] {topic} - {user_email} - {ticket_uuid}"
+    )
+
+    body_message = """
+
+    A new ticket has been assigned for the {ticket_topic} topic. Details below:
+
+    - User name: {user_name}
+    - User mail: {user_email}
+    - User phone: {user_phone}
+    - User origin: {user_origin}
+
+    - Ticket ID: {ticket_uuid}
+    - Ticket topic: {ticket_topic}
+    - Ticket question:
+
+    \"{ticket_question}\"
+
+
+
+    NOTE: This is an automatic notification, please do not reply to this sender.
+
+    """
+
+    def execute(
+        self,
+        integration_name: str,
+        user: UserEntity,
+        ticket: TicketEntity,
+        *args,
+        **kwargs
+    ):
+        subject = self.subject_message.format(
+            integration_name=integration_name,
+            topic=ticket.topic,
+            user_email=user.email,
+            ticket_uuid=ticket.uuid,
+        )
+
+        body = self.body_message.format(
+            user_name=user.name,
+            user_email=user.email,
+            user_phone=user.phone,
+            user_origin=user.origin,
+            ticket_uuid=ticket.uuid,
+            ticket_topic=ticket.topic,
+            ticket_question=ticket.question,
+        )
+        super().execute(
+            email_recipients=[self.internal_to_email],
+            body=body,
+            subject=subject,
+            *args,
+            **kwargs
+        )

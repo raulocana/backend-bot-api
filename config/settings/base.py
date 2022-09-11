@@ -199,6 +199,11 @@ EMAIL_BACKEND = env(
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-timeout
 EMAIL_TIMEOUT = 15
 
+INTERNAL_DISTRIBUTION_EMAIL = env(
+    "INTERNAL_DISTRIBUTION_EMAIL",
+    default="internal-notifications@internal.umishop.com",
+)
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.

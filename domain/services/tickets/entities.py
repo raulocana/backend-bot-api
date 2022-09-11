@@ -1,8 +1,22 @@
+from enum import Enum
+
 from domain.services.common.entities import Entity
 
 
 class TicketEntity(Entity):
     entity_name = "Ticket"
+
+    class Topics(Enum):
+        SALES = "SALES"
+        PRICING = "PRICING"
+        OTHER = "OTHER"
+
+        @classmethod
+        def from_str(cls, value: str):
+            for topic in list(cls):
+                if topic.value == value.upper():
+                    return topic
+            return cls.OTHER
 
     def __init__(
         self,

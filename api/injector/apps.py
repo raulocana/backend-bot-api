@@ -25,6 +25,6 @@ class InjectorConfig(AppConfig):
                 app_config_modules.append(services)
             except ImportError:
                 raise ImportError(
-                    f"Service module does not exist on {app} app. Execution aborted."
+                    f"Services module does not exist on {app} app. Execution aborted."
                 )
         return app_config_modules
