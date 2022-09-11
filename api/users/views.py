@@ -1,12 +1,17 @@
-from django.contrib.auth import get_user_model
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from api.users.serializers import CreateUserRequestSerializer
+from domain.services.users.interactors import CreateOrUpdateUserInteractor
 
 
 class UserViewSet(CreateModelMixin, GenericViewSet):
+
+    create_or_update_user_interactor = (
+        CreateOrUpdateUserInteractor()
+    )  # TODO: inject as dependency
+
     def get_serializer_class(self):
         match self.action:
             case "create":
@@ -18,16 +23,8 @@ class UserViewSet(CreateModelMixin, GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        """Basic user creation or update, obfuscates if user already exists"""
-        User = get_user_model()
-        try:
-            user = User.objects.get(email=serializer.validated_data.get("email"))
-            user.name = serializer.validated_data.get("name")
-            user.phone = serializer.validated_data.get("phone")
-            user.origin = serializer.validated_data.get("origin", None)
-            user.save()
-        except Exception:
-            user = User.objects.create(**serializer.validated_data)
-            # run async task for send welcome email.
+        user = self.create_or_update_user_interactor.execute(
+            **serializer.validated_data
+        )
 
         return Response({"uuid": user.uuid})
