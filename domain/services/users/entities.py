@@ -2,7 +2,7 @@ from domain.services.common.entities import Entity
 
 
 class UserEntity(Entity):
-    entity_name = "UserEntity"
+    entity_name = "User"
 
     def __init__(
         self,
