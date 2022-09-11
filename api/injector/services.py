@@ -1,5 +1,7 @@
 import inject
 
+from config import celery_app
+
 
 def inject_dependencies(config_modules):
 
@@ -10,3 +12,9 @@ def inject_dependencies(config_modules):
                 binder.install(services.inject_dependencies)
 
     inject.configure_once(configure)
+
+
+def export_tasks(config_modules):
+    for services in config_modules:
+        if hasattr(services, "export_tasks"):
+            services.export_tasks(celery_app)

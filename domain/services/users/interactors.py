@@ -1,6 +1,6 @@
 import inject
 
-from domain.services.notifications.interactors import SendWelcomeMailInteractor
+from api.notifications.tasks import SendWelcomeMailTask
 from domain.services.users.entities import UserEntity
 from domain.services.users.repositories import UserRepository
 
@@ -9,7 +9,7 @@ class CreateOrUpdateUserInteractor:
 
     user_repository = inject.attr(UserRepository)
 
-    send_welcome_mail_interactor = inject.attr(SendWelcomeMailInteractor)
+    send_welcome_mail_task = inject.attr(SendWelcomeMailTask)
 
     def execute(
         self, name: str, email: str, phone: str, origin: str = None
@@ -43,4 +43,4 @@ class CreateOrUpdateUserInteractor:
         self.user_repository.save(user)
 
     def _send_welcome_mail(self, user: UserEntity):
-        self.send_welcome_mail_interactor.execute(email=user.email, user_name=user.name)
+        self.send_welcome_mail_task.execute(email=user.email, user_name=user.name)

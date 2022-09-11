@@ -4,7 +4,7 @@ from django.apps import AppConfig
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-from api.injector.services import inject_dependencies
+from api.injector.services import export_tasks, inject_dependencies
 
 
 class InjectorConfig(AppConfig):
@@ -14,6 +14,7 @@ class InjectorConfig(AppConfig):
     def ready(self) -> None:
         config_modules = self._get_app_config_modules()
         inject_dependencies(config_modules)
+        export_tasks(config_modules)
 
     @staticmethod
     def _get_app_config_modules():
