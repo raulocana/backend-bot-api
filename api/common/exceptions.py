@@ -7,7 +7,10 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if response is None:
-        response = Response({"error": exc.args[0]}, status=exc.status_code)
+        status_code = 500
+        if hasattr(exc, "status_code"):
+            status_code = exc.status_code
+        response = Response({"error": exc.args[0]}, status=status_code)
 
     if response is not None:
         response.data["status_code"] = response.status_code

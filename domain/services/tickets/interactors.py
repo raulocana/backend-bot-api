@@ -1,3 +1,5 @@
+import inject
+
 from domain.services.common.exceptions import DoesNotExistException
 from domain.services.tickets.entities import TicketEntity
 from domain.services.tickets.repositories import TicketRepository
@@ -7,8 +9,8 @@ from domain.services.users.repositories import UserRepository
 
 class CreateTicketInteractor:
 
-    user_repository = UserRepository()  # TODO: inject as dependency
-    ticket_repository = TicketRepository()  # TODO: inject as dependency
+    user_repository = inject.attr(UserRepository)
+    ticket_repository = inject.attr(TicketRepository)
 
     def execute(self, user_uuid: str, topic: str, question: str) -> TicketEntity:
         user = self.user_repository.get_by_uuid(user_uuid)

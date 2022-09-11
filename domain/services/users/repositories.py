@@ -1,13 +1,13 @@
-from api.users.data.datasource import UserDatasource
+import inject
+
 from domain.services.common.exceptions import DoesNotExistException
+from domain.services.users.datasources import UserDatasourceInterface
 from domain.services.users.entities import UserEntity
 
 
 class UserRepository:
 
-    user_datasource = (
-        UserDatasource()
-    )  # TODO: inject as dependency, invoking the interface
+    user_datasource = inject.attr(UserDatasourceInterface)
 
     def save(self, user: UserEntity) -> UserEntity:
         return self.user_datasource.save(user)

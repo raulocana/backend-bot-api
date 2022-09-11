@@ -1,3 +1,4 @@
+import inject
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -8,9 +9,7 @@ from domain.services.users.interactors import CreateOrUpdateUserInteractor
 
 class UserViewSet(CreateModelMixin, GenericViewSet):
 
-    create_or_update_user_interactor = (
-        CreateOrUpdateUserInteractor()
-    )  # TODO: inject as dependency
+    create_or_update_user_interactor = inject.instance(CreateOrUpdateUserInteractor)
 
     def get_serializer_class(self):
         match self.action:

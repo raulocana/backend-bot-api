@@ -1,10 +1,12 @@
+import inject
+
 from domain.services.users.entities import UserEntity
 from domain.services.users.repositories import UserRepository
 
 
 class CreateOrUpdateUserInteractor:
 
-    user_repository = UserRepository()  # TODO: inject as dependency
+    user_repository = inject.attr(UserRepository)
 
     def execute(
         self, name: str, email: str, phone: str, origin: str = None

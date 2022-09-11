@@ -1,3 +1,4 @@
+import inject
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -8,7 +9,7 @@ from domain.services.tickets.interactors import CreateTicketInteractor
 
 class TicketViewSet(CreateModelMixin, GenericViewSet):
 
-    create_ticket_interactor = CreateTicketInteractor()
+    create_ticket_interactor = inject.instance(CreateTicketInteractor)
 
     def get_serializer_class(self):
         match self.action:
