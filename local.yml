@@ -44,6 +44,7 @@ services:
     container_name: api_local_mailhog
     ports:
       - "8025:8025"
+      - "1025:1025"
 
   redis:
     image: redis:6
