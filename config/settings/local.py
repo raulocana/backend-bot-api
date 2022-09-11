@@ -10,8 +10,11 @@ SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
     default="XeD1eNipgNM3YFKFzwnedyUxvrwoqBuhu8aa2Naa4DkMX33udVhbTi9L3DmA8Bvx",
 )
+
+NGROK_EXTERNAL_URL = env("NGROK_EXTERNAL_URL", default="0.0.0.0")
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"] + [NGROK_EXTERNAL_URL]
 
 # CACHES
 # ------------------------------------------------------------------------------
