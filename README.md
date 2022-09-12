@@ -5,70 +5,55 @@ Landbot Backend Challenge API!
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
+## Context
+
+This is a repository that aims to provide a Django Rest API for handling external requests from a Landbot bot, as an integration peer in the lead management process.
+
+The project bootstraps from a Django Cookiecutter template, as this is the quickest and safest way to create a Django Rest API with production-ready features. From that template, all unrequired dependencies and modules have been removed, providing a final project both easy to maintain and lightweight.
+
+All the contained features have been developed from a requirement standpoint. Thus, the project delivers the requested attributes with the best architecture and code scalability while maintaining the code base as shorter and maintainable as possible.
+
+Mainly, you will find a Django + DRF API with four apps: the first two of them are in charge of managing the users and the tickets (for customer support, or another department); the third one handles notifications (email service or extra integrations); the last one focuses on dependency injection (taking advantage of the Django apps module loading process).
+
+Both, the users and tickets apps, have basic tests to ensure all the DB operations can be safely performed within the requested features for the API.
+
+In the background, there are other services also supporting the main one, such as a PostgreSQL DB, a Redis Queue (only for brokering asynchronous tasks, but potentially useful for the caching of domain entities), a Celery Worker plus a Celery Beat, and a MailHog service for local email management.
+
+Thanks to the combination of Redis and Celery it is possible to handle asynchronous operations such as sending the welcome email (in this case with a 60-second delay, but without blocking the request thread), or sending various internal notifications using an asynchronous broker.
+
+The broker, in this case, handles the topic within the expected scopes and creates an asynchronous task for each notification that shall be sent. These notifications are mimicked as emails because the span of the project does not provide external apps to connect with, but this approach makes different integrations decoupled from each other, so they are very easy to extend, as every external service may have its particular domain interactor and communication repository.
+
+Every service is containerized, so horizontal scalability is directly obtainable through container replication. Also, this allows potential deployment on Kubernetes clusters where with just some deployment files it is possible to expose the complete service in production, having autoscaling capabilities and without compromising security (all the important secrets are intake as environment variables already).
+
+Finally, an important disclaimer is that the project is not ready to be run in production mode, as it does not have TLS certificates (handled by Traefik and Let's Encrypt), or a production SMTP Server or External Service declared.
+
 ## Settings
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+There is a Makefile file in the project root, where a commonly needed command could be found.
 
-## Basic Commands
+The project could be initialized with the command:
 
-### Setting Up Your Users
+    $ make init
 
--   To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+This command builds the containers, collects static files as for the admin panel, generate the necessary migrations and applies them, and finnaly start all the services in detached-mode.
 
--   To create a **superuser account**, use this command:
+Other useful commands are:
 
-        $ python manage.py createsuperuser
+    $ make restart
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+    $ make showmigrations
 
-### Type checks
+    $ make createsuperuser
 
-Running type checks with mypy:
 
-    $ mypy api
+For the different favours of run-modes: `run-debug` starts all the services but Django, in order to running it from the IDE debugger; `run-verbose` starts all the services but in attached-mode.
 
-### Test coverage
+    $ make run-debug
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
+    $ make run-verbose
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
+### Running tests
 
-#### Running tests with pytest
+For tests running there is also a make command, which runs a separate container with the local configuration:
 
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
-
-### Celery
-
-This app comes with Celery.
-
-To run a celery worker:
-
-``` bash
-cd api
-celery -A config.celery_app worker -l info
-```
-
-Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the same folder with *manage.py*, you should be right.
-
-### Email Server
-
-In development, it is often nice to be able to see emails that are being sent from your application. For that reason local SMTP server [MailHog](https://github.com/mailhog/MailHog) with a web interface is available as docker container.
-
-Container mailhog will start automatically when you will run all docker containers.
-Please check [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html) for more details how to start all containers.
-
-With MailHog running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+    $ make tests
