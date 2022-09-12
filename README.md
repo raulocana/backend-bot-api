@@ -31,6 +31,8 @@ Finally, an important disclaimer is that the project is not ready to be run in p
 
 It is essential that the environment variable `NGROK_EXTERNAL_URL` is set to the Ngrok URL that tunnels to your local service, this could be done using the `.django` env file at `.envs/.local` on the root project. If the service is running through a debugger, use the debugger running configuration to set it.
 
+Also, the required Landbot bot builder used could be found [here](https://app.landbot.io/gui/bot/1552525/builder).
+
 There is a Makefile file in the project root, where a commonly needed command could be found.
 
 The project could be initialized with the command:
